@@ -1,5 +1,5 @@
-import ActionDispatcher from './ActionDispatcher'
-import createActionWrapper from './createActionWrapper'
+import ActionDispatcher from './src/ActionDispatcher'
+import createActionWrapper from './src/createActionWrapper'
 
 // pass-through dummy action handler
 function forwardValue(...args) {

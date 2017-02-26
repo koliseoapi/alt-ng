@@ -2,8 +2,8 @@
   "name": "alt-ng",
   "version": "0.0.1",
   "description": "A new generation of the alt flux implementation",
-  "main": "src/Alt.js",
-  "jsnext:main": "src/Alt.js",
+  "main": "Alt.js",
+  "jsnext:main": "Alt.js",
   "devDependencies": {
     "babel-plugin-istanbul": "^4.0.0",
     "babel-plugin-transform-object-rest-spread": "^6.20.2",
@@ -25,9 +25,8 @@
     "url": "https://github.com/koliseoapi/alt-ng.git"
   },
   "authors": [
-    "Josh Perez <josh@goatslacker.com>",
-    "Jonathan Lehman <jonathan.lehman91@gmail.com>",
-    "Carlos Coloma <ccescribano@gmail.com>"
+    "Carlos Coloma <ccescribano@gmail.com>",
+    "Nacho Coloma <icoloma@gmail.com>"
   ],
   "license": "MIT",
   "scripts": {
@@ -37,13 +36,16 @@
   },
   "files": [
     "src",
-    "README.md"
+    "Alt.js",
+    "Store.js",
+    "AltContainer.js"
   ],
   "keywords": [
     "alt",
     "es6",
     "flux",
-    "react"
+    "react",
+    "alt"
   ],
   "config": {
     "ghooks": {

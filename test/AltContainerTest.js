@@ -1,8 +1,8 @@
 import 'jsdom-global/register';
-import Alt from '../src/Alt'
-import Store from '../src/Store'
+import Alt from '../Alt'
+import Store from '../Store'
 import React from 'react'
-import AltContainer from '../src/AltContainer'
+import AltContainer from '../AltContainer'
 //import sinon from 'sinon'
 import assert from 'assert';
 import { mount } from 'enzyme';

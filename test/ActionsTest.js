@@ -1,5 +1,5 @@
-import Alt from '../src/Alt'
-import Store from '../src/Store'
+import Alt from '../Alt'
+import Store from '../Store'
 import assert from 'assert';
 import sinon from 'sinon';
 

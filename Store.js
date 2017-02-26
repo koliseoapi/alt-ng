@@ -1,6 +1,6 @@
-import EventSource from './EventSource'
-import { isMutableObject } from './utils'
-import ActionDispatcher from './ActionDispatcher'
+import EventSource from './src/EventSource'
+import { isMutableObject } from './src/utils'
+import ActionDispatcher from './src/ActionDispatcher'
 
 class Store {
 
