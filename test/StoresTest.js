@@ -115,13 +115,13 @@ describe('Stores', () => {
     assert.equal('hello', store2.getState().foo);
   });
 
-  it('bind multiple actions on same handler with reverseBindActions', () => {
+  it('bind multiple actions on same handler with bindListeners()', () => {
     const actions = alt.createActions('Actions', { generate: ['sup', 'sap'] })
-    class ReverseStore extends Store {
+    class MultipleStore extends Store {
 
       constructor() {
         super();
-        this.reverseBindActions({
+        this.bindListeners({
           foo: [ actions.sup, actions.sap ]
         });
 
@@ -133,7 +133,7 @@ describe('Stores', () => {
 
     }
 
-    const store = alt.createStore('ReverseStore', new ReverseStore(actions));
+    const store = alt.createStore('MultipleStore', new MultipleStore(actions));
     actions.sup('foo');
     assert.equal('foo', store.getState().x);
     actions.sap('bar');

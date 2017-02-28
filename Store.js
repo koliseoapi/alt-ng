@@ -32,14 +32,14 @@ class Store {
   }
 
   // where keys are methods in the Store, and the values are the actions
-  reverseBindActions(actions) {
-    Object.keys(actions).forEach(name => {
+  bindListeners(listeners) {
+    Object.keys(listeners).forEach(name => {
       const handler = this[name]
       if (!handler) {
         throw new ReferenceError(`${name} is not defined in Store`)
       }
 
-      let values = actions[name]
+      let values = listeners[name]
       values = Array.isArray(values)? values : [ values ];
       values.forEach(action => this.bindAction(action, handler))
     })
