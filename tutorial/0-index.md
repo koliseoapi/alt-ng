@@ -8,7 +8,7 @@ categories: [tutorial]
 
 # Getting Started
 
-Alt is a library that facilitates the managing of state within your JavaScript applications. It is modeled after flux.
+`alt-ng` is a library that facilitates the managing of state within your JavaScript applications. It is modeled after flux.
 
 Flux is an application architecture for building complex user interfaces. It modifies MVC in favor of unidirectional data flow. 
 What this means is that data enters through a single place (your Actions) and then flow outward through a dispatcher to the state manager 
