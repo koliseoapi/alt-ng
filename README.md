@@ -5,11 +5,11 @@
 
 [![NPM](https://nodei.co/npm/alt-ng.png?downloads=true)](https://nodei.co/npm/alt-ng/)
 
-`alt-ng` is a Flux implementation that removes all the boilerplate traditionally associated to managing data. `alt-ng` does not use
-switch statements, is based on JavaScript classes, and supports Promises as first-class citizens. Check out
-[the tutorial](http://alt-ng.js.org/tutorial/), or jump straight into the [documentation](http://alt-ng.koliseo.com/doc/).
+`alt-ng` is a Flux implementation that removes all the boilerplate traditionally associated to managing data. `alt-ng` is based on JavaScript classes, does not use
+switch statements and supports Promises out-of-the-box. Check out
+[the tutorial](http://alt-ng.koliseo.com/tutorial/), or jump straight into the [documentation](http://alt-ng.koliseo.com/doc/).
 
-### Why you should be using alt-ng
+### Features of alt-ng
 
 * [Promises](http://alt-ng.koliseo.com/tutorial/promises) are first class citizens
 * **Lightweight**: A lot of code has been removed from the original alt implementation to make it even more lightweight
