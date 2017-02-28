@@ -1,0 +1,23 @@
+{
+  "name": "alt-website",
+  "version": "1.0.0",
+  "description": "The alt.js documentation website",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com/icoloma/alt-website"
+  },
+  "keywords": [
+    "alt",
+    "react",
+    "flux"
+  ],
+  "author": "Nacho Coloma <icoloma@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "primer-css": "^4.6.0"
+  }
+}

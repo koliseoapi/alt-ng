@@ -1,0 +1,18 @@
+# Site settings
+title: Alt
+description: > # this means to ignore newlines until "baseurl:"
+  Alt-ng is a Flux implementation that removes all the 
+  boilerplate associated to managing data in React applications.
+baseurl: ""
+url: "http://alt-ng.js.org"
+categories: [ tutorial, doc ]
+exclude:
+  - Gemfile
+  - README.md
+  - .gitignore
+sass:
+  style: compressed
+  load_paths:
+    - node_modules
+    - css
+#  sass_dir: node_modules
