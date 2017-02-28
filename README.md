@@ -9,7 +9,7 @@
 switch statements, is based on JavaScript classes, and supports Promises as first-class citizens. Check out
 [the tutorial](http://alt-ng.js.org/tutorial/), or jump straight into the [documentation](http://alt-ng.koliseo.com/doc/).
 
-### Why you should be using Alt
+### Why you should be using alt-ng
 
 * [Promises](http://alt-ng.koliseo.com/tutorial/promises) are first class citizens
 * **Lightweight**: A lot of code has been removed from the original alt implementation to make it even more lightweight
@@ -22,4 +22,6 @@ switch statements, is based on JavaScript classes, and supports Promises as firs
 
 ## License
 
-[![MIT](https://img.shields.io/npm/l/alt.svg?style=flat)](http://josh.mit-license.org)
+Licensed under [the MIT license](https://github.com/koliseoapi/alt-ng/blob/master/LICENSE)
+
+`alt-ng` is based on the great job by Josh Perez, the original author of [Alt](https://github.com/goatslacker/alt)
