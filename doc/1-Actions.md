@@ -26,7 +26,7 @@ export default alt.createActions('MyActions', {
 
 The value returned by an Action will be handled the following way:
 
-* Promises will be executed, and [the result will be dispatched](#Promises}.
+* Promises will be executed, and [the result will be dispatched](#promises).
 * Functions will be called and the returned value will be dispatched again.
 * Actions that return `undefined` will not be dispatched anywhere.
 * Anything else that is not undefined will be passed to the dispatcher.
@@ -92,11 +92,15 @@ class LocationStore extends Alt.Store {
 }
 ```
 
-These Actions will still return the Promise, making testing super simple:
+These Actions will still return the Promise, making testing super simple. An example using mocha:
 
 ```js
-locationActions.fetchLocations().then((locations) => {
-  assert.equal(3, locations.length);
-})
+import assert from 'assert';
+
+it('action should return three locations', () => {
+  locationActions.fetchLocations().then((locations) => {
+    assert.equal(3, locations.length);
+  })
+});
 ```
 

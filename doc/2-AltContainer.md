@@ -1,6 +1,7 @@
 ---
 layout: default
 title: AltContainer
+permalink: /doc/AltContainer
 description: Encapsulate your components to pass Storage state as properties
 categories: [doc]
 ---
@@ -69,6 +70,8 @@ class AppComponent extends React.Component {
 }
 ```
 
+## mergeFunc
+
 When specifying multiple stores, store state will be merged and the result passed as properties. You can customize how the state 
 is merged by passing a mergeFunc property.
 
@@ -83,4 +86,29 @@ function mergeFunc(stores) {
 <AltContainer stores={ [store1, store2] } mergeFunc={mergeFunc}>
   <UserDataComponent />
 </AltContainer>
+```
+
+## element
+
+`AltContainer` will use a `div` element as parent by default, but you can override that by passing an `element` property. Any properties 
+assigned to `AltContainer` will be assigned to this element. 
+
+This component:
+
+```js
+<AltContainer store={ store } element="aside" id="current-user" className="left-info">
+  <UserDataComponent />
+</AltContainer>
+``` 
+
+Will generate the following HTML:
+
+```js
+<aside id="current-user" class="left-info">
+  <section>
+    <h1>User data</h1>
+    <p>Name: John Doe</p>
+    <p>Age: 24</p>
+  </section>
+</aside>
 ```

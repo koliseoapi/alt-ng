@@ -159,6 +159,29 @@ class MyStore extends Alt.Store {
 }
 ```
 
+You can define an `otherwise` method in your action to receive any dispatched values not explicitely managed by the Store class.
+
+```js
+const MyActions = alt.generateActions('MyActions', [ 'foo', 'bar', 'baz' ]);
+
+class MyStore extends Alt.Store {
+
+  constructor() {
+    this.bindActions(MyActions);
+  }
+
+  foo(data) {
+    // handle MyActions.foo()
+  }
+
+  otherwise(values) {
+    // handle MyActions.bar() and MyActions.baz()
+  }
+
+}
+```
+
+
 ## Store#bindListeners
 
 > (listenersMap: object): undefined
@@ -189,10 +212,56 @@ class MyStore extends Alt.Store {
 }
 ```
 
-### Store#otherwise
+# Initial state
 
-> otherwise(value: object, action: object): undefined
+Stores are plain EcmaScript classes that can initialize state in the constructor. For example, you application could 
+include some state in the HTML page:
 
-An optional method that you can implement in your store in order to receive all dispatches that are not currently being 
-handled in your store explicitly via `bindActions()`.
+```html
+<script type="application/json" id="currentUser">
+{ "id": 42, "name": "John Doe", "enabled": true }
+</script>
+<script src="MyApp"></script>
+```
 
+Then the application can use this state to initialize the Store:
+
+`UserStore.js`
+
+```js
+import Store from 'alt-ng/Store';
+
+class UserStore extends Store {
+
+  constructor(currentUser) {
+    this.state = { currentUser };
+  }
+
+}
+
+export default function(alt, currentUser) {
+  return alt.createStore('UserStore', new UserStore(currentUser));
+}
+```
+
+`MyApp.js`
+
+```js
+import createUserStore from '../stores/UserStore';
+import alt from './alt';
+
+const currentUser = JSON.parse(document.getElementById('currentUser').html());
+const store = createUserStore(alt, currentUser);
+```
+
+You can also get creative by processing and saving parts of the state to `localStorage`:
+
+```js
+// save state
+const { currentUser } = store.getState(); 
+localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+// restore state
+const restoredUser = JSON.parse(localStorage.getItem('currentUser'));
+store = createUserStore(alt, restoredUser);
+```
