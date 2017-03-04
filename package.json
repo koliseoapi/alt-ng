@@ -48,11 +48,6 @@
     "react",
     "alt"
   ],
-  "config": {
-    "ghooks": {
-      "pre-push": "npm run lint"
-    }
-  },
   "nyc": {
     "require": [
       "babel-register"
