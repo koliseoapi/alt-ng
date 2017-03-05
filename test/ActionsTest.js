@@ -47,6 +47,15 @@ describe('Actions', () => {
     //alt.flush()
   })
 
+  it('createActions complains when argument is missing', () => {
+    assert.throws(() => alt.createActions({ generate: ['sup', 'foo'] }), /Missing namespace/);
+    assert.throws(() => alt.createActions('SomeActions'), /actions argument is missing/);
+
+    // actions already exist with this name
+    alt.createActions('Actions', { generate: ['sup', 'foo'] })
+    assert.throws(() => alt.createActions('Actions', { generate: ['sup', 'foo'] }), /An Actions instance already exists with name Actions/);
+  })
+
   it('createActions() with generate', () => {
     const actions = alt.createActions('Actions', { generate: ['sup', 'foo'] })
     const store = alt.createStore('TestStore', new TestStore(actions));

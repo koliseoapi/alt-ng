@@ -25,3 +25,8 @@ export function isMutableObject(target) {
   )
 }
 
+// return true if the argument is a String
+// see http://stackoverflow.com/questions/4059147/check-if-a-variable-is-a-string
+export function isString(myVar) {
+  return typeof myVar === 'string' || myVar instanceof String
+}

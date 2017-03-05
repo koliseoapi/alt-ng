@@ -32,6 +32,19 @@ describe('Stores', () => {
     state = undefined;
   })
 
+  it('createStore complains when argument is missing', () => {
+    assert.throws(() => alt.createStore(), /Missing displayName/);
+
+    // argument is not an instance, but something else
+    assert.throws(() => alt.createStore('Store', class Something {}), /Missing Store, or not an instance of Store/);
+    assert.throws(() => alt.createStore('Store', 'foo'), /Missing Store, or not an instance of Store/);
+
+    // store already exists
+    const actions = alt.createActions('Actions', { generate: ['sup'] })
+    alt.createStore('TestStore', new TestStore(actions));
+    assert.throws(() => alt.createStore('TestStore', new TestStore(actions)), /Store already defined with name TestStore/);
+  })
+
   it('subscribed listeners should receive changes in the state', () => {
     const actions = alt.createActions('Actions', { generate: ['sup'] })
     const store = alt.createStore('TestStore', new TestStore(actions));

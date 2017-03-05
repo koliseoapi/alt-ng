@@ -1,5 +1,6 @@
-import ActionDispatcher from './src/ActionDispatcher'
-import createActionWrapper from './src/createActionWrapper'
+import ActionDispatcher from './src/ActionDispatcher';
+import createActionWrapper from './src/createActionWrapper';
+import { isString } from './src/utils';
 
 // pass-through dummy action handler
 function forwardValue(...args) {
@@ -34,6 +35,17 @@ export default class Alt {
    * it will generate pass-through methods with all these names
    */
   createActions(namespace, actions) {
+    if (process.env.NODE_ENV !== 'production') {
+      if (!namespace || !isString(namespace)) {
+        throw new Error('Missing namespace');
+      }
+      if (!actions || !Object.keys(actions).length) {
+        throw new Error('actions argument is missing');
+      }
+      if (this.actions[namespace]) {
+        throw new Error(`An Actions instance already exists with name ${namespace}`)
+      }
+    }
 
     actions = generateActions(actions);
     const actionWrappers = Object.keys(actions).reduce((obj, actionName) => {
@@ -42,12 +54,24 @@ export default class Alt {
       obj[actionName] = actionWrapper;
       return obj;
 
-    }, this.actions[namespace] || {});
+    }, {});
 
     return (this.actions[namespace] = actionWrappers);
   }
 
   createStore(displayName, store) {
+    if (process.env.NODE_ENV !== 'production') {
+      if (!displayName || !isString(displayName)) {
+        throw new Error('Missing displayName');
+      }
+      if (!store || !(store.eventSource)) {
+        throw new Error('Missing Store, or not an instance of Store');
+      }
+      if (this.stores[displayName]) {
+        throw new Error(`Store already defined with name ${displayName}`);
+      }
+    }
+
     store.displayName = displayName;
     store.dispatcher = store.dispatcher? this.dispatcher.merge(store.dispatcher) : this.dispatcher;
 
