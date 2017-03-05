@@ -2,8 +2,7 @@
 
 [![Build Status](https://secure.travis-ci.org/koliseoapi/alt-ng.svg?branch=master)](http://travis-ci.org/koliseoapi/alt-ng)
 [![Coverage Status](https://img.shields.io/coveralls/koliseoapi/alt-ng.svg?style=flat)](https://coveralls.io/r/koliseoapi/alt-ng)
-
-[![NPM](https://nodei.co/npm/alt-ng.png?downloads=true)](https://nodei.co/npm/alt-ng/)
+<a href="https://www.npmjs.com/package/alt-ng"><img alt="NPM Downloads" src="https://img.shields.io/npm/dm/alt-ng.svg?maxAge=43200"></a>
 
 `alt-ng` is a Flux implementation that removes all the boilerplate traditionally associated to managing data. `alt-ng` is based on JavaScript classes, does not use
 switch statements and supports Promises out-of-the-box. Check out
