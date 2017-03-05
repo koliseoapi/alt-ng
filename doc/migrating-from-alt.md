@@ -23,11 +23,15 @@ categories: [doc]
 
 * When an Action returns a Promise, it will run and the value resolved by the Promise will be dispatched to the Store handlers. The action method will still return the Promise, which [can be chained for testing purposes](/doc/Actions#promises).
 * Actions are not classes, but plain JSON objects.
+* The `namespace` is now required when creating Actions, and the order of arguments in `alt.createActions` is switched (`namespace` is now the first attribute).
 
 ## Stores
 
 * The `bootstrap` feature has been replaced with a [Store initial state pattern](/doc/Stores#initial-state)
 * Lifecycle events in Stores have been removed with no replacement (`Store.on()` has been removed). Specifically, error handlers used to be able to silently catch exceptions while dispatching.
+* Stores now must extend `alt-ng/Store`
+* The `displayName` is now required when creating Stores, and the syntax of arguments in `alt.createStore` has changed.
+* Stores are now instantiated manually before calling `alt.createStore()`, and all state must be stored in the `state` attribute.
 
 ## AltContainer
 
