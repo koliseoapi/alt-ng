@@ -154,4 +154,22 @@ describe('Stores', () => {
 
   })
 
+  it('bindListeners() complain if method does not exist', () => {
+    //const actions = alt.createActions('Actions', { generate: ['sup', 'sap'] })
+    class MultipleStore extends Store {
+
+      constructor() {
+        super();
+        this.bindListeners({
+          foo: []
+        });
+
+      }
+
+    }
+
+    assert.throws(() => alt.createStore('MultipleStore', new MultipleStore()), /foo is not defined in Store/);
+
+  })
+
 });

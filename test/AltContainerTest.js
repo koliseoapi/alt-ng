@@ -51,12 +51,8 @@ describe('AltContainer', () => {
   })
 
   it('requires either store or stores', () => {
-    try {
-      mount(<AltContainer><div /></AltContainer>);
-      assert.fail('Should not accept empty store and stores');
-    } catch (e) {
-      assert.equal('Must define either store or stores', e.message);
-    }
+    assert.throws(() => mount(<AltContainer><div /></AltContainer>), /Must define either store or stores/)
+    assert.throws(() => mount(<AltContainer store={testStore} stores={[testStore]}><div /></AltContainer>), /Cannot define both store and stores/)
   })
 
   it('renders HTML', () => {

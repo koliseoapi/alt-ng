@@ -36,7 +36,7 @@ class Store {
     Object.keys(listeners).forEach(name => {
       const handler = this[name]
       if (!handler) {
-        throw new ReferenceError(`${name} is not defined in Store`)
+        throw new Error(`${name} is not defined in Store`)
       }
 
       let values = listeners[name]
