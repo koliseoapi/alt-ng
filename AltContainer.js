@@ -10,11 +10,13 @@ export default class AltContainer extends React.Component {
     super(props)
     const { store, stores } = props;
 
-    if (!stores && !store) {
-      throw new Error('Must define either store or stores')
-    }
-    if (stores && store) {
-      throw new Error('Cannot define both store and stores')
+    if (process.env.NODE_ENV !== 'production') {
+      if (!stores && !store) {
+        throw new Error('Must define either store or stores')
+      }
+      if (stores && store) {
+        throw new Error('Cannot define both store and stores')
+      }
     }
     this.onStoreChange = this.onStoreChange.bind(this);
     this.state = this._reduceState();
