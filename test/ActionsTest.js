@@ -25,12 +25,12 @@ class PromiseStore extends Store {
 
   constructor(actions) {
     super();
-    this.state = { payload: undefined, error: undefined, loading: false };
+    this.state = { myData: undefined, myError: undefined, loading: false };
     this.bindActions(actions);
   }
 
-  sup(x, { payload, error, meta: { loading } = {}}) {
-    this.setState({ payload, error, loading })
+  sup({ myData, myError, loading }) {
+    this.setState({ myData, myError, loading })
   }
 
 }
@@ -85,7 +85,7 @@ describe('Actions', () => {
 
       sup() {
         return function (dispatch) {
-          dispatch('foo')
+          this.dispatch({ payload: 'foo' })
         }
       }
 
@@ -95,57 +95,12 @@ describe('Actions', () => {
     assert.equal('foo', store.getState().x);
   })
 
-  it('action that returns a Promise that succeeds', () => {
+  it('preventDefault() should not trigger dispatch', () => {
     const actions = alt.createActions('Actions', {
 
       sup() {
-        return new Promise((resolve) => resolve('foo'))
-      }
-
-    })
-    const store = alt.createStore('PromiseStore', new PromiseStore(actions));
-    const promise = actions.sup();
-    const { payload, loading, error } = store.getState();
-    assert(loading);
-    assert(!payload);
-    assert(!error);
-    return promise.then((value) => {
-      assert.equal('foo', value);
-      const { payload, loading, error } = store.getState();
-      assert(!loading);
-      assert.equal('foo', payload);
-      assert(!error);
-    })
-  })
-
-  it('action that returns a Promise that fails', () => {
-    const actions = alt.createActions('Actions', {
-
-      sup() {
-        return new Promise((resolve, reject) => { throw new Error('too many ninjas') })
-      }
-
-    })
-    const store = alt.createStore('PromiseStore', new PromiseStore(actions));
-    const promise = actions.sup();
-    const { payload, loading, error } = store.getState();
-    assert(loading);
-    assert(!payload);
-    assert(!error);
-    return promise.then(() => assert.fail('Promise should have failed')).catch((e) => {
-      const { payload, loading, error } = store.getState();
-      assert(!loading);
-      assert(!payload);
-      assert.equal('too many ninjas', error.message);
-      assert.equal('too many ninjas', e.message);
-    })
-  })
-
-  it('action that returns undefined should not trigger dispatch', () => {
-    const actions = alt.createActions('Actions', {
-
-      sup() {
-        return undefined;
+        this.preventDefault();
+        return 'foo';
       }
 
     })
@@ -153,5 +108,79 @@ describe('Actions', () => {
     actions.sup();
     assert.equal(null, store.getState().x);
   })
+
+  it('action that returns a Promise that succeeds', () => {
+    const actions = alt.createActions('Actions', {
+
+      sup() {
+        this.dispatch({ payload: { loading: true } })
+        return Promise.resolve({ myData: 'foo' });
+      }
+
+    })
+    const store = alt.createStore('PromiseStore', new PromiseStore(actions));
+    const promise = actions.sup();
+    const { myData, loading} = store.getState();
+    assert(loading);
+    assert(!myData);
+    return promise.then((value) => {
+      assert.equal('foo', value.myData);
+      const { myData, loading } = store.getState();
+      assert(!loading);
+      assert.equal('foo', myData);
+    })
+  })
+
+  it('passing error and loading as action.error and action.meta.loading', () => {
+    const actions = alt.createActions('Actions', {
+
+      sup() {
+        // dispatch an Action manually
+        this.dispatch({
+          type: 'Actions/sup',
+          payload: null, 
+          meta: { loading: true }
+        });
+        return Promise.reject(new Error('too many ninjas')).catch(e => {
+          // dispatch an action using extra arguments
+          this.dispatch({
+            payload:e, 
+            error: true, 
+            meta: { foo: 'bar' }
+          });
+          throw e;
+        });
+      }
+
+    });
+
+    class MetaStore extends Store {
+
+      constructor() {
+        super();
+        this.bindActions(actions);
+      }
+
+      sup(payload, action) {
+        this.setState({ payload, action });
+      }
+
+    }
+    const store = alt.createStore('MetaStore', new MetaStore());
+    const promise = actions.sup();
+    const { action: { payload, error, meta: { loading } = {} } } = store.getState();
+    assert(!payload);
+    assert(!error);
+    assert(loading);
+    return promise.then(() => assert.fail('Promise should have failed')).catch((e) => {
+      const { action: { payload, error, meta: { loading, foo } = {} } } = store.getState();
+      assert(!loading);
+      assert(error);
+      assert.equal('bar', foo);
+      assert.equal('too many ninjas', payload.message);
+      assert.equal('too many ninjas', e.message);
+    })
+  })
+
 
 });

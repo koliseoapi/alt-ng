@@ -2,38 +2,41 @@ import { isPromise, isFunction } from './utils'
 
 export default function createActionWrapper(dispatcher, type, actionFunction) {
 
-  // wrap the payload and metadata into a FSA and send to dispatcher
-  const wrapAndDispatch = (payload, { error, loading } = {}) => {
-    const action = { type, payload };
-    if (error) {
-      action.error = error;
+  function actionWrapper(...args) {
+    actionWrapper._dispatchReturn = true;
+    const payload = actionFunction.call(actionWrapper, ...args)
+    if (actionWrapper._dispatchReturn) {
+      if (isPromise(payload)) {
+        return payload.then(function (result) {
+          actionWrapper.dispatch({ payload: result });
+          return result;
+        });
+      } else if (isFunction(payload)) {
+        return payload.call(actionWrapper);
+      } else {
+        actionWrapper.dispatch({ payload });
+      }
     }
-    if (loading) {
-      action.meta = { loading };
-    }
-    dispatcher.dispatch(action)
+    return payload;
   }
 
-  const actionWrapper = (...args) => {
-    const payload = actionFunction(...args)
-    if (isPromise(payload)) {
-      wrapAndDispatch(null, { loading: true });
-      return payload.then(function (result) {
-        wrapAndDispatch(result);
-        return result;
-      }).catch(function (error) {
-        wrapAndDispatch(null, { error });
-        throw error;
-      })
+  // make this.dispatch and this.dispatchAction available in the action method
+  Object.assign(actionWrapper, { 
+    type, 
 
-    } else if (isFunction(payload)) {
-      return payload(wrapAndDispatch, this)
-    } else if (payload !== undefined) {
-      wrapAndDispatch(payload)
+    // wrap the payload and metadata into a FSA and send to dispatcher
+    // @param action is a Flux Standard Action { type: string, payload: Object (optional), error: boolean (optional), meta: Object (optional) }
+    // if not providde, type will default to the type of this action
+    dispatch(action) {
+      action.type = action.type || this.type;
+      dispatcher.dispatch(action)
+    },
+
+    preventDefault() {
+      this._dispatchReturn = false;
     }
-    return payload
-  }
-  actionWrapper.type = type;
+
+  });
   return actionWrapper;
 
 }
