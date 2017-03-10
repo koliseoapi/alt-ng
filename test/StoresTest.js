@@ -172,4 +172,45 @@ describe('Stores', () => {
 
   })
 
+  it('detects mutable and immutable state', () => {
+    const actions = alt.createActions('Actions', { generate: ['sup'] })
+    class ImmutableStore extends Store {
+
+      constructor() {
+        super();
+        this.state = Object.freeze({ foo: 1, bar: 1 });
+        this.bindActions(actions);
+      }
+
+      sup(foo) {
+        this.setState({ foo });
+      }
+
+    }
+
+    class MutableStore extends Store {
+
+      constructor() {
+        super();
+        this.state = { foo: 1, bar: 1 };
+        this.bindActions(actions);
+      }
+
+      sup(foo) {
+        this.setState({ foo });
+      }
+
+    }
+
+    const is = alt.createStore('ImmutableStore', new ImmutableStore());
+    const ms = alt.createStore('MutableStore', new MutableStore());
+
+    assert.deepEqual({ foo: 1, bar: 1 }, is.getState());
+    assert.deepEqual({ foo: 1, bar: 1 }, ms.getState());
+    actions.sup(2);
+    assert.deepEqual({ foo: 2 }, is.getState());
+    assert.deepEqual({ foo: 2, bar: 1 }, ms.getState());
+
+  })
+
 });
