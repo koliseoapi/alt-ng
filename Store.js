@@ -61,8 +61,10 @@ class Store {
     this._triggerChange = false
   }
 
-  emitChange() {
-    this.eventSource.publish(this.state);
+  // emit a change in the Store state
+  // @param value the value to be emitted, default is this.state
+  emitChange(value = this.state) {
+    this.eventSource.publish(value);
   }
 
 }

@@ -213,4 +213,36 @@ describe('Stores', () => {
 
   })
 
+  it('emits custom Store change events', () => {
+    const actions = alt.createActions('Actions', { generate: ['inc'] })
+    class MultivaluedStore extends Store {
+
+      constructor() {
+        super();
+        this.state = {};
+        this.bindActions(actions);
+      }
+
+      inc(key) {
+        const value = (this.state[key] || 0) + 1;
+        const part = {};
+        part[key] = value;
+        this.setState(part);
+        this.preventDefault();
+        this.emitChange(part);
+      }
+
+    }
+
+    const store = alt.createStore('MultivaluedStore', new MultivaluedStore());
+    let lastKnownValue;
+    store.subscribe((v) => lastKnownValue = v);
+    actions.inc('foo');
+    actions.inc('foo');
+    assert.deepEqual({ foo: 2 }, lastKnownValue);
+    actions.inc('bar');
+    assert.deepEqual({ bar: 1 }, lastKnownValue);
+
+  })
+
 });
