@@ -24,6 +24,7 @@ export default class AltContainer extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    // todo: compare with the current properties, maybe we don't need to do anything
     this._destroySubscriptions()
     this.setState(this._reduceState(nextProps))
     this._registerStores(nextProps)
