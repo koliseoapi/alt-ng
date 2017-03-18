@@ -18,7 +18,7 @@ error value) disclosed as two arguments:
 Name | Type | description
 --- | --- | ---
 value | object | Value returned from the Action
-action | [Flux Standard Action](https://github.com/acdlite/flux-standard-action) | A [Flux Standard Action](https://github.com/acdlite/flux-standard-action) corresponding to the Action method. It includes `type`, `payload`, `error` and `meta.loading` (boolean) attributes. The last two are only used for Promises.
+action | [Flux Standard Action](https://github.com/acdlite/flux-standard-action) | A [Flux Standard Action](https://github.com/acdlite/flux-standard-action) corresponding to the Action method. It includes `type`, `payload`, `error` and `meta` attributes. `type` will be set to `${actionNameSpace}/${actionMethod}`, which is the value used by `ActionDispatcher` to find the registered Store method listeners.
 
 Stores offer a different internal and external API to enforce that state is not exposed and changes follow 
 the expected flow through Actions. 
@@ -181,7 +181,6 @@ class MyStore extends Alt.Store {
 }
 ```
 
-
 ## Store#bindListeners
 
 > (listenersMap: object): undefined
@@ -210,6 +209,37 @@ class MyStore extends Alt.Store {
     // will be called by MyActions.bar() and OtherActions.bar()
   }
 }
+```
+
+## Store.emitChange()
+
+> emitChange(value: Object = this.state)
+
+Will emit a `change` event to all observers that have been registered by `Store.subscribe()`. If `value` is missing, `this.state` will be used.
+
+```js
+class MyStore extends Store {
+
+  constructor() {
+    super();
+    this.state = {
+      foo: 1,
+      bar: 2
+    };
+  }
+
+  inc(key) {
+    const partValue = {};
+    partValue[key] = (this.state[key] || 0) + 1;
+    this.setState(partValue);
+
+    // do not emit everything, just the modified value
+    this.preventDefault();
+    this.emitChange(partValue);
+  }
+
+};
+
 ```
 
 # Initial state
