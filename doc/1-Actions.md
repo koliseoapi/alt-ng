@@ -113,3 +113,38 @@ it('action should return three locations', () => {
 });
 ```
 
+# Internal methods for Actions 
+
+There are a couple methods available inside of Action methods to modify the default dispatch behavior of Actions.
+
+> this.preventDefault() 
+
+Disables automatic dispatching of the result of an action. You can invoke this method to do your own dispatching invoking `this.dispatch()`.
+
+> this.dispatch({ type: String, payload: Object, error: boolean, meta: Object })
+
+Dispatches a FSA to the registered Stores. If not specified, the type will be set to `[actionNamespace]/[actionMethod]`, which is the type assigned to the method by default.
+
+```js
+alt.createActions('MyActions', {
+
+  fetch: function(data) {
+    this.preventDefault();
+    this.dispatch({
+      // default value is fine
+      // type: 'MyActions/fetch'
+
+      payload: data,
+      meta: { loading: true }
+    });
+    
+    return Promise.resolve('foo').catch((e) => {
+      this.dispatch({ 
+        error: true, 
+        meta: { error: e } 
+      });
+    });
+  })
+
+}
+```
