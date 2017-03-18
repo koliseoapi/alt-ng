@@ -6,7 +6,7 @@ permalink: /tutorial/promises
 categories: [tutorial]
 ---
 
-# Working with Promises
+# Dispatching Promises
 
 Not all actions are synchronous. When working with real world applications, it's frequent to see Actions that use 
 Promises to fetch data from a remote server using either [Fetch API](https://github.com/github/fetch) or a polyfill. 
@@ -28,8 +28,32 @@ export default alt.createActions('LocationActions', {
 });
 ```
 
-We can bind the Store to these Actions as usual. Action handlers associated to Promises will receive a second 
-argument with the `loading` and `error` state.
+We can bind the Store to these Actions as usual, and Promises will be resolved before dispatching the value to the Store. 
+
+# Dispatching extra states: loading and error
+
+You have full flexibility about how to dispatch the `loading` and `error` state, for example using the standard attributes of a [Flux Standard Action](https://github.com/acdlite/flux-standard-action). We can add this to the previous example:
+
+```js
+export default alt.createActions('LocationActions', {
+
+  fetchLocations() {
+    // notify the loading state immediately
+    this.dispatch({
+      meta: { loading: true }
+    });
+    return Promise.resolve([ 'Madrid', 'Berlin', 'San Francisco' ]).catch((errorMessage) => {
+      this.dispatch({ 
+        error: true, 
+        meta: { errorMessage } 
+      });
+      throw error;
+    });
+  }
+
+});
+```
+
 
 ```js
 import asyncLocationActions from '../actions/AsyncLocationActions';
@@ -46,16 +70,15 @@ class LocationStore extends Store {
     this.bindAction(asyncLocationActions.fetchLocations, this.onFetchData)
   }
 
-  onFetchData(locations, { error, meta: { loading }}) {
-    this.setState(locations, error, loading);
+  onFetchData(locations, { error, meta: { loading, errorMessage }}) {
+    this.setState(locations, error: errorMessage, loading);
   }
 
 }
 ```
 
-The second argument is an instance os [Standard Flux Action](https://github.com/acdlite/flux-standard-action), 
-including an `error` and `loading` attributes. An important deviation from the standard as it is today,
-`error` is the actual `Error` instance, not just a true/false value. 
+The second argument is an instance of [Standard Flux Action](https://github.com/acdlite/flux-standard-action), 
+including an `error` and `loading` attributes.  
 
 The action handler will be notified first when the Promise gets instantiated with `loading=true`. 
 The next update will either include either a successful response or an error message.
@@ -74,7 +97,7 @@ class LocationsComponent extends React.Component {
   render() {
     const { locations, loading, error } = this.props;
     if (error) {
-      return <div class="error">Something is wrong</div>;
+      return <div class="error">{ error.message }</div>;
     }
 
     if (loading) {

@@ -60,16 +60,25 @@ MyActions.baz(15);
 
 ### Promises
 
-Actions that return a Promise will dispatch twice, first to indicate a `loading` state and later to pass the successful resolution or rejection 
-error (see [Arguments to action handlers](/doc/Stores)).
+Actions that return a Promise will dispatch the result after resolving the Promise. You can add extra `dispatch` calls to notify `error` and `loading` states (see [Arguments to action handlers](/doc/Stores)).
 
 ```js
 const locationActions = alt.createActions('LocationActions', {
 
   fetchLocations() {
+    this.dispatch({
+      meta: { loading: true }
+    });
+
     // your HTTP GET request would go here.
     // We will just mock something for simplicity
-    return Promise.resolve([ 'Madrid', 'Berlin', 'San Francisco' ]);
+    return Promise.resolve([ 'Madrid', 'Berlin', 'San Francisco' ]).catch((errorMessage) => {
+      this.dispatch({ 
+        error: true, 
+        meta: { errorMessage } 
+      });
+      throw error;
+    });
   }
 
 });
@@ -85,8 +94,8 @@ class LocationStore extends Alt.Store {
     this.bindActions(AsyncLocationActions);
   }
 
-  fetchLocations(locations, { error, meta: { loading }}) {
-    this.setState(locations, error, loading);
+  fetchLocations(locations, { error, meta: { loading, errorMessage }}) {
+    this.setState(locations, error: errorMessage, loading);
   }
 
 }
