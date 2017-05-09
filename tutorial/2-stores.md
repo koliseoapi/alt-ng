@@ -21,7 +21,7 @@ class LocationStore extends Store {
   }
 }
 
-export alt.createStore('LocationStore', new LocationStore());
+export default alt.createStore('LocationStore', new LocationStore());
 ```
 
 State is modified by methods in the Store. These methods should be bound to the corresponding Actions by invoking 
@@ -52,7 +52,7 @@ class LocationStore extends Store {
   }
 }
 
-export alt.createStore('LocationStore', new LocationStore());
+export default alt.createStore('LocationStore', new LocationStore());
 ```
 
 Our Store will emit a change event when `LocationStore#updateLocations()` is finished, and our React Components 
