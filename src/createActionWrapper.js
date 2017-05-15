@@ -8,7 +8,7 @@ export default function createActionWrapper(dispatcher, type, actionFunction) {
     if (actionWrapper._dispatchReturn) {
       if (isPromise(payload)) {
         return payload.then(function (result) {
-          actionWrapper.dispatch({ payload: result });
+          actionWrapper._dispatchReturn && actionWrapper.dispatch({ payload: result });
           return result;
         });
       } else if (isFunction(payload)) {

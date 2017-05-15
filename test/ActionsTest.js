@@ -109,6 +109,24 @@ describe('Actions', () => {
     assert.equal(null, store.getState().x);
   })
 
+  it('preventDefault() in Promise should not trigger dispatch', () => {
+    const actions = alt.createActions('Actions', {
+
+      sup() {
+        return Promise.resolve('foo').then((value) => {
+          this.preventDefault();
+          return value;
+        })
+      }
+
+    })
+    const store = alt.createStore('TestStore', new TestStore(actions));
+    return actions.sup().then((value) => {
+      assert.equal(null, store.getState().x);
+      assert.equal('foo', value);
+    });
+  })
+
   it('action that returns a Promise that succeeds', () => {
     const actions = alt.createActions('Actions', {
 
