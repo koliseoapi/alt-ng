@@ -3,6 +3,7 @@
  * If there is more than one store, the stores themselves will be passed
  */
 import React from 'react'
+import PropTypes from 'prop-types';
 
 export default class AltContainer extends React.Component {
 
@@ -71,9 +72,8 @@ export default class AltContainer extends React.Component {
 
 }
 
-const PropTypes = React.PropTypes;
 const storeShape = PropTypes.shape({
-  getState: React.PropTypes.func.isRequired
+  getState: PropTypes.func.isRequired
 });
 AltContainer.propTypes = {
 
