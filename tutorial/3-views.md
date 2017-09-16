@@ -52,7 +52,7 @@ class LocationsComponent extends React.Component {
 
 }
 
-export default LocationsState;
+export default LocationsComponent;
 ```
 
 This is a bit messy, and we can do better. In the next step we will see how to render data 

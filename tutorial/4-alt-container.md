@@ -22,11 +22,11 @@ A pure LocationsComponent component would look like this (using
 [functional components](https://facebook.github.io/react/docs/components-and-props.html)):
 
 ```js
-function LocationsComponent(props) {
+function LocationsComponent({ locations }) {
   return (
     <ul>
       {
-        props.locations.map(function(location, index) => {
+        locations.map(function(location, index) => {
           return <li key={index}>{location.name}</li>
         })
       }
