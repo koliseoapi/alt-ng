@@ -67,6 +67,11 @@ class Store {
     this.eventSource.publish(value);
   }
 
+  // remove all listeners 
+  clearListeners() {
+    this.eventSource.clear();
+  }
+
 }
 
 export default Store

@@ -62,6 +62,16 @@ describe('Stores', () => {
     assert.equal('xxx', store.getState().y);
   })
 
+  it('clearListeners() should reset the list of listeners', () => {
+    const actions = alt.createActions('Actions', { generate: ['sap'] })
+    const store = alt.createStore('TestStore', new TestStore(actions));
+    store.subscribe(value => state = value);
+    const source = alt._stores['TestStore'].eventSource;
+    assert.equal(1, source.listeners.length);
+    store.clearListeners();
+    assert.equal(0, source.listeners.length);
+  })
+
   it('otherwise whould receive any action not assigned to a handler', () => {
     class ExtendedTestStore extends TestStore {
 

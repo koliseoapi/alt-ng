@@ -92,7 +92,12 @@ export default class Alt {
       remove: () => {
         this._stores = this._stores.filter(store => store.displayName !== displayName)
         delete this.stores[displayName]
+      },
+
+      clearListeners() {
+        store.clearListeners();
       }
+
     });
   }
 

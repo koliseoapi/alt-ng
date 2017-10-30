@@ -4,7 +4,7 @@
 export default class EventSource {
 
   constructor() {
-    this.listeners = []
+    this.clear();
   }
 
   subscribe(listener) {
@@ -23,6 +23,11 @@ export default class EventSource {
 
   publish(...args) {
     this.listeners.forEach(listener => listener(...args));
+  }
+
+  // clears all listeners registered in this EventSource 
+  clear() {
+    this.listeners = [];
   }
 
 }
