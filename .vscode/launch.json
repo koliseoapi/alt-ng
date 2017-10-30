@@ -8,7 +8,7 @@
       "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
       "args": [
         "--compilers", "js:babel-register",
-        "--no-timeouts", "test/StoresTest.js"
+        "--no-timeouts", "test/*Test.js"
       ],
       "sourceMaps": true,
       "cwd": "${workspaceRoot}"
