@@ -2,81 +2,89 @@
  * Will pass the state of a store as properties to the nested components.
  * If there is more than one store, the stores themselves will be passed
  */
-import React from 'react'
-import PropTypes from 'prop-types';
+import React from "react";
+import PropTypes from "prop-types";
 
 export default class AltContainer extends React.Component {
-
   constructor(props) {
-    super(props)
+    super(props);
     const { store, stores } = props;
 
-    if (process.env.NODE_ENV !== 'production') {
+    if (process.env.NODE_ENV !== "production") {
       if (!stores && !store) {
-        throw new Error('Must define either store or stores')
+        throw new Error("Must define either store or stores");
       }
       if (stores && store) {
-        throw new Error('Cannot define both store and stores')
+        throw new Error("Cannot define both store and stores");
       }
     }
     this.onStoreChange = this.onStoreChange.bind(this);
     this.state = this._reduceState();
-    this.storeListeners = []
+    this.storeListeners = [];
   }
 
   componentWillReceiveProps(nextProps) {
     // todo: compare with the current properties, maybe we don't need to do anything
-    this._destroySubscriptions()
-    this.setState(this._reduceState(nextProps))
-    this._registerStores(nextProps)
+    this._destroySubscriptions();
+    this.setState(this._reduceState(nextProps));
+    this._registerStores(nextProps);
   }
 
   componentDidMount() {
-    this._registerStores(this.props)
+    this._registerStores(this.props);
   }
 
   componentWillUnmount() {
-    this._destroySubscriptions()
+    this._destroySubscriptions();
   }
 
   _reduceState() {
     const { store, stores, mergeFunc } = this.props;
-    return store? store.getState() : mergeFunc(stores);
+    return store ? store.getState() : mergeFunc(stores);
   }
 
   _registerStores({ store, stores }) {
-    stores = stores || [ store ];
+    stores = stores || [store];
     stores.forEach(this._addSubscription.bind(this));
   }
 
   _destroySubscriptions() {
-    this.storeListeners.forEach(storeListener => storeListener.dispose())
-    this.storeListeners = []
+    this.storeListeners.forEach(storeListener => storeListener.dispose());
+    this.storeListeners = [];
   }
 
   _addSubscription(store) {
-    this.storeListeners.push(store.subscribe(this.onStoreChange))
+    this.storeListeners.push(store.subscribe(this.onStoreChange));
   }
 
   onStoreChange() {
-    this.setState(this._reduceState(this.props))
+    this.setState(this._reduceState(this.props));
   }
 
   render() {
-    const { element, children, store, stores, mergeFunc, ...nodeProps } = this.props;
-    return React.createElement(element, nodeProps, React.Children.map(children, child => {
-      const childrenProps = Object.assign({}, this.state, child.props);
-      return React.cloneElement(child, childrenProps);
-    }))
+    const {
+      element,
+      children,
+      store,
+      stores,
+      mergeFunc,
+      ...nodeProps
+    } = this.props;
+    return React.createElement(
+      element,
+      nodeProps,
+      React.Children.map(children, child => {
+        const childrenProps = Object.assign({}, this.state, child.props);
+        return React.cloneElement(child, childrenProps);
+      })
+    );
   }
-
 }
 
 const storeShape = PropTypes.shape({
   getState: PropTypes.func.isRequired
 });
 AltContainer.propTypes = {
-
   // specify either store (a single store) or stores (array of stores)
   store: storeShape,
   stores: PropTypes.arrayOf(storeShape),
@@ -87,13 +95,13 @@ AltContainer.propTypes = {
 
   // when rendering multiple children, a parent element will be created. Default is "div"
   element: PropTypes.string
-}
+};
 
 AltContainer.defaultProps = {
-  element: 'div',
+  element: "div",
   mergeFunc: function(stores) {
     return stores.reduce(function(state, store) {
       return Object.assign(state, store.getState());
     }, {});
   }
-}
+};
