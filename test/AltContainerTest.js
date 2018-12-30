@@ -3,12 +3,13 @@ import Alt from "../Alt";
 import Store from "../Store";
 import React from "react";
 import AltContainer from "../AltContainer";
-//import sinon from 'sinon'
 import assert from "assert";
-import { mount } from "enzyme";
+import { configure, mount } from "enzyme";
+import Adapter from "enzyme-adapter-react-16";
 
 const alt = new Alt();
 const actions = alt.createActions("Actions", { generate: ["sup"] });
+configure({ adapter: new Adapter() });
 
 class TestStore extends Store {
   constructor() {
