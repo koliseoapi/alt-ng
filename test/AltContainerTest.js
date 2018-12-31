@@ -1,15 +1,11 @@
-import "jsdom-global/register";
 import Alt from "../Alt";
 import Store from "../Store";
 import React from "react";
 import AltContainer from "../AltContainer";
-import assert from "assert";
-import { configure, mount } from "enzyme";
-import Adapter from "enzyme-adapter-react-16";
+import renderer from "react-test-renderer";
 
 const alt = new Alt();
 const actions = alt.createActions("Actions", { generate: ["sup"] });
-configure({ adapter: new Adapter() });
 
 class TestStore extends Store {
   constructor() {
@@ -41,121 +37,106 @@ const testStore2 = alt.createStore("testStore2", new TestStore2(actions));
 describe("AltContainer", () => {
   let wrapper;
 
-  afterEach(() => {
-    wrapper != null && wrapper.unmount();
-    wrapper = null;
-    //alt.flush()
-  });
-
   it("requires either store or stores", () => {
-    assert.throws(
-      () =>
-        mount(
-          <AltContainer>
-            <div />
-          </AltContainer>
-        ),
-      /Must define either store or stores/
-    );
-    assert.throws(
-      () =>
-        mount(
-          <AltContainer store={testStore} stores={[testStore]}>
-            <div />
-          </AltContainer>
-        ),
-      /Cannot define both store and stores/
-    );
+    expect(() =>
+      renderer.create(
+        <AltContainer>
+          <div />
+        </AltContainer>
+      )
+    ).toThrowError("Must define either store or stores");
+    expect(() =>
+      renderer.create(
+        <AltContainer store={testStore} stores={[testStore]}>
+          <div />
+        </AltContainer>
+      )
+    ).toThrowError("Cannot define both store and stores");
   });
 
   it("renders HTML", () => {
-    wrapper = mount(
-      <AltContainer store={testStore}>
-        <span className="foo" />
-      </AltContainer>
-    );
-    assert.equal('<div><span class="foo"></span></div>', wrapper.html());
+    expect(
+      renderer
+        .create(
+          <AltContainer store={testStore}>
+            <span className="foo" />
+          </AltContainer>
+        )
+        .toJSON()
+    ).toMatchSnapshot();
   });
 
   it("renders multiple children with keys", () => {
-    wrapper = mount(
-      <AltContainer store={testStore}>
-        <div key="1" />
-        <div key="2" />
-        <div key="3" />
-      </AltContainer>
-    );
+    expect(
+      renderer
+        .create(
+          <AltContainer store={testStore}>
+            <div key="1" />
+            <div key="2" />
+            <div key="3" />
+          </AltContainer>
+        )
+        .toJSON()
+    ).toMatchSnapshot();
   });
 
   it("store state is propagated as props", () => {
-    wrapper = mount(
+    let tree = renderer.create(
       <AltContainer store={testStore}>
         <div key="div1" className="div1" />
         <div key="div2" className="div2" />
       </AltContainer>
     );
     actions.sup("hello");
-    const div1 = wrapper.find(".div1");
-    const div2 = wrapper.find(".div2");
-    assert.equal("hello", wrapper.state("x"));
-    assert.equal("hello", div1.props().x);
-    assert.equal("div1", div1.props().className);
-    assert.equal("hello", div2.props().x);
-
+    expect(tree.toJSON()).toMatchSnapshot();
     actions.sup("bye");
-    assert.equal("bye", wrapper.state("x"));
-    assert.equal("bye", div1.props().x);
+    expect(tree.toJSON()).toMatchSnapshot();
   });
 
   it("multiple store states are merged", () => {
-    wrapper = mount(
+    let tree = renderer.create(
       <AltContainer stores={[testStore, testStore2]}>
         <div className="xxx" />
       </AltContainer>
     );
     actions.sup("foobar");
-    const { x, y } = wrapper.find(".xxx").props();
-    assert.equal("foobar", x);
-    assert.equal("foobar", y);
+    expect(tree.toJSON()).toMatchSnapshot();
   });
 
   it("should apply changes to properties", function() {
-    class Container extends React.Component {
-      constructor() {
-        super();
-        this.state = { store: testStore };
-      }
-
-      render() {
-        return (
-          <AltContainer store={this.state.store}>
-            <div className="xxx" />
-          </AltContainer>
-        );
-      }
-    }
-    const container = mount(<Container />);
-    const component = container.find(".xxx");
+    const node = document.createElement("div");
+    let tree = renderer.create(
+      <AltContainer store={testStore}>
+        <div className="xxx" />
+      </AltContainer>,
+      node
+    );
     actions.sup("strike1");
-    container.setState({ store: testStore2 });
+    expect(tree.toJSON()).toMatchSnapshot();
+    renderer.create(
+      <AltContainer store={testStore2}>
+        <div className="xxx" />
+      </AltContainer>,
+      node
+    );
     actions.sup("strike2");
-    assert.equal("strike1", component.props().x);
-    assert.equal("strike2", component.props().y);
+    expect(tree.toJSON()).toMatchSnapshot();
   });
 
   it("keeps refs in children", function() {
+    const onRef = jest.fn(() => document.createElement("div"));
     class Container extends React.Component {
       render() {
         return (
           <AltContainer store={testStore}>
-            <span ref="span" />
+            <span ref={onRef} />
           </AltContainer>
         );
       }
     }
-    wrapper = mount(<Container />);
-    const span = wrapper.ref("span");
+    const tree = renderer.create(<Container />);
     actions.sup("hello");
-    assert.equal("hello", span.props().x);
+    expect(tree.toJSON()).toMatchSnapshot();
+    expect(onRef).toBeCalledTimes(1);
   });
 });

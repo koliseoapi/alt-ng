@@ -1,0 +1,86 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AltContainer keeps refs in children 1`] = `
+<div>
+  <span
+    x="hello"
+  />
+</div>
+`;
+
+exports[`AltContainer multiple store states are merged 1`] = `
+<div>
+  <div
+    className="xxx"
+    x="foobar"
+    y="foobar"
+  />
+</div>
+`;
+
+exports[`AltContainer renders HTML 1`] = `
+<div>
+  <span
+    className="foo"
+    x={null}
+  />
+</div>
+`;
+
+exports[`AltContainer renders multiple children with keys 1`] = `
+<div>
+  <div
+    x={null}
+  />
+  <div
+    x={null}
+  />
+  <div
+    x={null}
+  />
+</div>
+`;
+
+exports[`AltContainer should apply changes to properties 1`] = `
+<div>
+  <div
+    className="xxx"
+    x="strike1"
+  />
+</div>
+`;
+
+exports[`AltContainer should apply changes to properties 2`] = `
+<div>
+  <div
+    className="xxx"
+    x="strike2"
+  />
+</div>
+`;
+
+exports[`AltContainer store state is propagated as props 1`] = `
+<div>
+  <div
+    className="div1"
+    x="hello"
+  />
+  <div
+    className="div2"
+    x="hello"
+  />
+</div>
+`;
+
+exports[`AltContainer store state is propagated as props 2`] = `
+<div>
+  <div
+    className="div1"
+    x="bye"
+  />
+  <div
+    className="div2"
+    x="bye"
+  />
+</div>
+`;

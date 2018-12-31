@@ -1,6 +1,5 @@
 import Alt from "../Alt";
 import Store from "../Store";
-import assert from "assert";
 
 class TestStore extends Store {
   constructor(actions) {
@@ -42,28 +41,26 @@ describe("Actions", () => {
   });
 
   it("createActions complains when argument is missing", () => {
-    assert.throws(
-      () => alt.createActions({ generate: ["sup", "foo"] }),
-      /Missing namespace/
+    expect(() => alt.createActions({ generate: ["sup", "foo"] })).toThrowError(
+      "Missing namespace"
     );
-    assert.throws(
-      () => alt.createActions("SomeActions"),
-      /actions argument is missing/
+
+    expect(() => alt.createActions("SomeActions")).toThrowError(
+      "actions argument is missing"
     );
 
     // actions already exist with this name
     alt.createActions("Actions", { generate: ["sup", "foo"] });
-    assert.throws(
-      () => alt.createActions("Actions", { generate: ["sup", "foo"] }),
-      /An Actions instance already exists with name Actions/
-    );
+    expect(() =>
+      alt.createActions("Actions", { generate: ["sup", "foo"] })
+    ).toThrowError("An Actions instance already exists with name Actions");
   });
 
   it("createActions() with generate", () => {
     const actions = alt.createActions("Actions", { generate: ["sup", "foo"] });
     const store = alt.createStore("TestStore", new TestStore(actions));
     actions.sup("xxx");
-    assert.equal("xxx", store.getState().x);
+    expect(store.getState().x).toBe("xxx");
   });
 
   it("createActions() creates multiple types of actions", () => {
@@ -77,8 +74,8 @@ describe("Actions", () => {
     const store = alt.createStore("TestStore", new TestStore(actions));
     actions.sup("foo", "baz");
     actions.sap("bar");
-    assert.deepEqual(["foo", "baz"], store.getState().x);
-    assert.equal("bar-sapped", store.getState().y);
+    expect(store.getState().x).toEqual(["foo", "baz"]);
+    expect(store.getState().y).toBe("bar-sapped");
   });
 
   it("action that returns a function", () => {
@@ -91,7 +88,7 @@ describe("Actions", () => {
     });
     const store = alt.createStore("TestStore", new TestStore(actions));
     actions.sup();
-    assert.equal("foo", store.getState().x);
+    expect(store.getState().x).toBe("foo");
   });
 
   it("preventDefault() should not trigger dispatch", () => {
@@ -103,7 +100,7 @@ describe("Actions", () => {
     });
     const store = alt.createStore("TestStore", new TestStore(actions));
     actions.sup();
-    assert.equal(null, store.getState().x);
+    expect(store.getState().x).toBeNull();
   });
 
   it("preventDefault() in Promise should not trigger dispatch", () => {
@@ -117,8 +114,8 @@ describe("Actions", () => {
     });
     const store = alt.createStore("TestStore", new TestStore(actions));
     return actions.sup().then(value => {
-      assert.equal(null, store.getState().x);
-      assert.equal("foo", value);
+      expect(store.getState().x).toBeNull();
+      expect(value).toBe("foo");
     });
   });
 
@@ -132,13 +129,13 @@ describe("Actions", () => {
     const store = alt.createStore("PromiseStore", new PromiseStore(actions));
     const promise = actions.sup();
     const { myData, loading } = store.getState();
-    assert(loading);
-    assert(!myData);
+    expect(loading).toBeTruthy();
+    expect(myData).toBeFalsy();
     return promise.then(value => {
-      assert.equal("foo", value.myData);
+      expect(value.myData).toBe("foo");
       const { myData, loading } = store.getState();
-      assert(!loading);
-      assert.equal("foo", myData);
+      expect(loading).toBeFalsy();
+      expect(myData).toBe("foo");
     });
   });
 
@@ -178,20 +175,22 @@ describe("Actions", () => {
     const {
       action: { payload, error, meta: { loading } = {} }
     } = store.getState();
-    assert(!payload);
-    assert(!error);
-    assert(loading);
+    expect(payload).toBeFalsy();
+    expect(error).toBeFalsy();
+    expect(loading).toBeTruthy();
     return promise
-      .then(() => assert.fail("Promise should have failed"))
+      .then(() => {
+        throw new Error("Promise should have failed");
+      })
       .catch(e => {
         const {
           action: { payload, error, meta: { loading, foo } = {} }
         } = store.getState();
-        assert(!loading);
-        assert(error);
-        assert.equal("bar", foo);
-        assert.equal("too many ninjas", payload.message);
-        assert.equal("too many ninjas", e.message);
+        expect(loading).toBeFalsy();
+        expect(error).toBeTruthy();
+        expect(foo).toBe("bar");
+        expect(payload.message).toBe("too many ninjas");
+        expect(e.message).toBe("too many ninjas");
       });
   });
 });

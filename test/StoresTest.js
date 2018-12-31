@@ -1,6 +1,5 @@
 import Alt from "../Alt";
 import Store from "../Store";
-import assert from "assert";
 import sinon from "sinon";
 
 class TestStore extends Store {
@@ -30,25 +29,23 @@ describe("Stores", () => {
   });
 
   it("createStore complains when argument is missing", () => {
-    assert.throws(() => alt.createStore(), /Missing displayName/);
+    expect(() => alt.createStore()).toThrowError("Missing displayName");
 
     // argument is not an instance, but something else
-    assert.throws(
-      () => alt.createStore("Store", class Something {}),
-      /Missing Store, or not an instance of Store/
+    expect(() => alt.createStore("Store", class Something {})).toThrowError(
+      "Missing Store, or not an instance of Store"
     );
-    assert.throws(
-      () => alt.createStore("Store", "foo"),
-      /Missing Store, or not an instance of Store/
+
+    expect(() => alt.createStore("Store", "foo")).toThrowError(
+      "Missing Store, or not an instance of Store"
     );
 
     // store already exists
     const actions = alt.createActions("Actions", { generate: ["sup"] });
     alt.createStore("TestStore", new TestStore(actions));
-    assert.throws(
-      () => alt.createStore("TestStore", new TestStore(actions)),
-      /Store already defined with name TestStore/
-    );
+    expect(() =>
+      alt.createStore("TestStore", new TestStore(actions))
+    ).toThrowError("Store already defined with name TestStore");
   });
 
   it("subscribed listeners should receive changes in the state", () => {
@@ -56,7 +53,7 @@ describe("Stores", () => {
     const store = alt.createStore("TestStore", new TestStore(actions));
     store.subscribe(value => (state = value));
     actions.sup("xxx");
-    assert.equal("xxx", state.x);
+    expect(state.x).toBe("xxx");
   });
 
   it("preventDefault() should cancel change notifications", () => {
@@ -64,8 +61,8 @@ describe("Stores", () => {
     const store = alt.createStore("TestStore", new TestStore(actions));
     store.subscribe(value => (state = value));
     actions.sap("xxx");
-    assert.equal("undefined", typeof state);
-    assert.equal("xxx", store.getState().y);
+    expect(typeof state).toBe("undefined");
+    expect(store.getState().y).toBe("xxx");
   });
 
   it("clearListeners() should reset the list of listeners", () => {
@@ -73,9 +70,9 @@ describe("Stores", () => {
     const store = alt.createStore("TestStore", new TestStore(actions));
     store.subscribe(value => (state = value));
     const source = alt._stores["TestStore"].eventSource;
-    assert.equal(1, source.listeners.length);
+    expect(source.listeners).toHaveLength(1);
     store.clearListeners();
-    assert.equal(0, source.listeners.length);
+    expect(source.listeners).toHaveLength(0);
   });
 
   it("otherwise whould receive any action not assigned to a handler", () => {
@@ -89,8 +86,8 @@ describe("Stores", () => {
     store.subscribe(value => (state = value));
     actions.sup("foo");
     actions.xxx("bar");
-    assert.equal("foo", state.x);
-    assert.equal("bar", state.y);
+    expect(state.x).toBe("foo");
+    expect(state.y).toBe("bar");
   });
 
   it("multiple handlers should trigger a single change event", () => {
@@ -114,9 +111,9 @@ describe("Stores", () => {
     const callback = sinon.spy(value => (state = value));
     store.subscribe(callback);
     actions.sup("hello");
-    assert.equal("hello", state.x);
-    assert.equal("hello", state.y);
-    assert(callback.calledOnce);
+    expect(state.x).toBe("hello");
+    expect(state.y).toBe("hello");
+    expect(callback.calledOnce).toBeTruthy();
   });
 
   it("multiple stores triggered by the same action", () => {
@@ -134,8 +131,8 @@ describe("Stores", () => {
     const store1 = alt.createStore("TestStore", new TestStore(actions));
     const store2 = alt.createStore("TestStore2", new TestStore2(actions));
     actions.sup("hello");
-    assert.equal("hello", store1.getState().x);
-    assert.equal("hello", store2.getState().foo);
+    expect(store1.getState().x).toBe("hello");
+    expect(store2.getState().foo).toBe("hello");
   });
 
   it("bind multiple actions on same handler with bindListeners()", () => {
@@ -155,13 +152,12 @@ describe("Stores", () => {
 
     const store = alt.createStore("MultipleStore", new MultipleStore(actions));
     actions.sup("foo");
-    assert.equal("foo", store.getState().x);
+    expect(store.getState().x).toBe("foo");
     actions.sap("bar");
-    assert.equal("bar", store.getState().x);
+    expect(store.getState().x).toBe("bar");
   });
 
   it("bindListeners() complain if method does not exist", () => {
-    //const actions = alt.createActions('Actions', { generate: ['sup', 'sap'] })
     class MultipleStore extends Store {
       constructor() {
         super();
@@ -171,10 +167,9 @@ describe("Stores", () => {
       }
     }
 
-    assert.throws(
-      () => alt.createStore("MultipleStore", new MultipleStore()),
-      /foo is not defined in Store/
-    );
+    expect(() =>
+      alt.createStore("MultipleStore", new MultipleStore())
+    ).toThrowError("foo is not defined in Store");
   });
 
   it("detects mutable and immutable state", () => {
@@ -206,11 +201,11 @@ describe("Stores", () => {
     const is = alt.createStore("ImmutableStore", new ImmutableStore());
     const ms = alt.createStore("MutableStore", new MutableStore());
 
-    assert.deepEqual({ foo: 1, bar: 1 }, is.getState());
-    assert.deepEqual({ foo: 1, bar: 1 }, ms.getState());
+    expect(is.getState()).toEqual({ foo: 1, bar: 1 });
+    expect(ms.getState()).toEqual({ foo: 1, bar: 1 });
     actions.sup(2);
-    assert.deepEqual({ foo: 2 }, is.getState());
-    assert.deepEqual({ foo: 2, bar: 1 }, ms.getState());
+    expect(is.getState()).toEqual({ foo: 2 });
+    expect(ms.getState()).toEqual({ foo: 2, bar: 1 });
   });
 
   it("emits custom Store change events", () => {
@@ -237,8 +232,8 @@ describe("Stores", () => {
     store.subscribe(v => (lastKnownValue = v));
     actions.inc("foo");
     actions.inc("foo");
-    assert.deepEqual({ foo: 2 }, lastKnownValue);
+    expect(lastKnownValue).toEqual({ foo: 2 });
     actions.inc("bar");
-    assert.deepEqual({ bar: 1 }, lastKnownValue);
+    expect(lastKnownValue).toEqual({ bar: 1 });
   });
 });

@@ -4,12 +4,9 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Launch Program",
-      "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
-      "args": [
-        "--compilers", "js:@babel/register",
-        "--no-timeouts", "test/*Test.js"
-      ],
+      "name": "Jest tests",
+      "program": "${workspaceRoot}/node_modules/jest/bin/jest.js",
+      "args": ["--watch", "--runInBand"],
       "sourceMaps": true,
       "cwd": "${workspaceRoot}"
     }
