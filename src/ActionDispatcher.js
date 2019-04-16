@@ -42,7 +42,7 @@ export default class ActionDispatcher {
     listeners.forEach(function(listener) {
       const store = listener.store;
       store._triggerChange = true;
-      listener.call(store, action.payload, action);
+      listener(action.payload, action);
       if (store._triggerChange) {
         stores[store.displayName] = store;
       }
