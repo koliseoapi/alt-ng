@@ -9,11 +9,11 @@ export default class ActionDispatcher {
   }
 
   merge({ listeners }) {
-    Object.keys(listeners).forEach(function(actionType) {
+    Object.keys(listeners).forEach(actionType => {
       this.listeners[actionType] = (this.listeners[actionType] || []).concat(
         listeners[actionType]
       );
-    }, this);
+    });
   }
 
   subscribe(actionType, listener) {

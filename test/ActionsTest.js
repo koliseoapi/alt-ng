@@ -193,4 +193,19 @@ describe("Actions", () => {
         expect(e.message).toBe("too many ninjas");
       });
   });
+
+  it("Multiple Stores using inheritance", () => {
+    const actions = alt.createActions("Actions", { generate: ["sup", "sap"] });
+    class TestStore2 extends TestStore {
+      constructor() {
+        super(actions);
+      }
+      sap() {}
+    }
+    const testStore = alt.createStore("TestStore", new TestStore(actions));
+    const testStore2 = alt.createStore("TestStore2", new TestStore2(actions));
+    const listeners = alt.dispatcher.listeners["Actions/sup"];
+    expect(listeners[0].store.displayName).toBe("TestStore");
+    expect(listeners[1].store.displayName).toBe("TestStore2");
+  });
 });
