@@ -33,11 +33,6 @@ export default class ActionDispatcher {
   dispatch(action) {
     const listeners = this.listeners[action.type] || [];
     const stores = {};
-    if (process.env.NODE_ENV !== "production") {
-      if (listeners.length == 0) {
-        console.log(`No listeners registered for action ${action.type}`);
-      }
-    }
 
     listeners.forEach(function(listener) {
       const store = listener.store;
