@@ -1,26 +1,22 @@
 {
   "name": "alt-ng",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "description": "A new generation of the alt flux implementation",
   "main": "Alt.js",
   "jsnext:main": "Alt.js",
   "devDependencies": {
-    "@babel/core": "^7.4.3",
-    "@babel/plugin-proposal-object-rest-spread": "^7.4.3",
-    "@babel/preset-env": "^7.4.3",
-    "@babel/preset-react": "^7.0.0",
+    "@babel/core": "^7.7.7",
+    "@babel/plugin-proposal-object-rest-spread": "^7.7.7",
+    "@babel/preset-env": "^7.7.7",
+    "@babel/preset-react": "^7.7.4",
     "babel-core": "^7.0.0-bridge.0",
-    "babel-jest": "^24.7.1",
-    "babel-plugin-istanbul": "^5.1.1",
-    "babel-register": "^6.26.0",
-    "coveralls": "^3.0.3",
-    "jest": "^24.7.1",
-    "nyc": "^13.3.0",
+    "babel-jest": "^24.9.0",
+    "coveralls": "^3.0.9",
+    "jest": "^24.9.0",
     "prop-types": "^15.7.2",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
-    "react-test-renderer": "^16.8.6",
-    "sinon": "^7.3.1"
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "react-test-renderer": "^16.12.0"
   },
   "repository": {
     "type": "git",
@@ -32,9 +28,9 @@
   ],
   "license": "MIT",
   "scripts": {
-    "coverage": "NODE_ENV=test nyc --reporter=lcov --reporter=text jest",
     "postversion": "git push && git push --tags",
-    "test": "jest"
+    "test": "jest",
+    "coverage": "jest --coverage && cat ./coverage/lcov.info | coveralls"
   },
   "files": [
     "src",
@@ -44,16 +40,7 @@
   ],
   "keywords": [
     "alt",
-    "es6",
     "flux",
-    "react",
-    "alt"
-  ],
-  "nyc": {
-    "require": [
-      "babel-register"
-    ],
-    "sourceMap": false,
-    "instrument": false
-  }
+    "react"
+  ]
 }

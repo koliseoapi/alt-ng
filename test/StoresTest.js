@@ -1,6 +1,5 @@
 import Alt from "../Alt";
 import Store from "../Store";
-import sinon from "sinon";
 
 class TestStore extends Store {
   constructor(actions) {
@@ -108,12 +107,12 @@ describe("Stores", () => {
       }
     }
     const store = alt.createStore("TwiceStore", new TwiceStore(actions));
-    const callback = sinon.spy(value => (state = value));
+    const callback = jest.fn(value => (state = value));
     store.subscribe(callback);
     actions.sup("hello");
     expect(state.x).toBe("hello");
     expect(state.y).toBe("hello");
-    expect(callback.calledOnce).toBeTruthy();
+    expect(callback).toHaveBeenCalledTimes(1);
   });
 
   it("multiple stores triggered by the same action", () => {
