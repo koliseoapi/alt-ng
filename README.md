@@ -1,7 +1,7 @@
 # alt-ng
 
 [![Build Status](https://secure.travis-ci.org/koliseoapi/alt-ng.svg?branch=master)](http://travis-ci.org/koliseoapi/alt-ng)
-[![Coverage Status](https://img.shields.io/coveralls/koliseoapi/alt-ng.svg?style=flat)](https://coveralls.io/r/koliseoapi/alt-ng)
+[![Coverage Status](https://coveralls.io/repos/github/koliseoapi/alt-ng/badge.svg?branch=master)](https://coveralls.io/github/koliseoapi/alt-ng?branch=master)
 <a href="https://www.npmjs.com/package/alt-ng"><img alt="NPM Downloads" src="https://img.shields.io/npm/dm/alt-ng.svg?maxAge=43200"></a>
 
 `alt-ng` is a Flux implementation that removes all the boilerplate traditionally associated to managing data. `alt-ng` is based on JavaScript classes, does not use
@@ -10,14 +10,14 @@ switch statements and supports Promises out-of-the-box. Check out
 
 ### Features of alt-ng
 
-* [Promises](http://alt-ng.koliseo.com/tutorial/promises) are first class citizens
-* **Lightweight**: A lot of code has been removed from the original alt implementation to make it even more lightweight
-* **No constants or switch statements**: Removes all the boilerplate of traditional Flux frameworks
-* **Unidirectional flow of information**: Enforces the basic principles in [flux](http://facebook.github.io/flux/docs/overview.html)
-* Follows the [Flux Standard Action](https://github.com/acdlite/flux-standard-action/) standard.
-* Designed to work in both the **client and server side**
-* Actively maintained and being used in production.
-* Based on ES6 classes
+- [Promises](http://alt-ng.koliseo.com/tutorial/promises) are first class citizens
+- **Lightweight**: A lot of code has been removed from the original alt implementation to make it even more lightweight
+- **No constants or switch statements**: Removes all the boilerplate of traditional Flux frameworks
+- **Unidirectional flow of information**: Enforces the basic principles in [flux](http://facebook.github.io/flux/docs/overview.html)
+- Follows the [Flux Standard Action](https://github.com/acdlite/flux-standard-action/) standard.
+- Designed to work in both the **client and server side**
+- Actively maintained and being used in production.
+- Based on ES6 classes
 
 ## Code example
 
@@ -26,7 +26,7 @@ With `alt-ng`, action results are automatically dispatched to methods in the sto
 `alt.js`
 
 ```js
-import Alt from 'alt-ng';
+import Alt from "alt-ng";
 
 // create our singleton instance
 export default new Alt();
@@ -117,13 +117,12 @@ export { userACtions, userStore };
 The easiest way to use this Store is to inject state as properties to the view:
 
 ```js
-import UserStore from './UserStore';
-import UserACtions from './UserActions';
-import AltContainer from 'alt-ng/AltContainer';
-import React from 'react';
+import UserStore from "./UserStore";
+import UserACtions from "./UserActions";
+import AltContainer from "alt-ng/AltContainer";
+import React from "react";
 
 class UserData extends React.Component {
-
   constructor() {
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
@@ -137,8 +136,8 @@ class UserData extends React.Component {
     e.preventDefault();
     // after a successful page save, send the browser somewhere else
     UserActions.save(this.props.user).then(() => {
-      location.href = '/users';
-    })
+      location.href = "/users";
+    });
   }
 
   render() {
@@ -147,26 +146,23 @@ class UserData extends React.Component {
       <form onSubmit={this.onSubmit}>
         <label>
           Name:
-          <input name="name" value={user.name} onChange={this.onChange}/>
+          <input name="name" value={user.name} onChange={this.onChange} />
         </label>
         <button type="submit" />
       </form>
-    )
+    );
   }
-
 }
 
 class MyApp extends React.Component {
-
   render() {
     // inject userStore.state as UserData.props
     return (
       <AltContainer store={userStore}>
         <UserData />
       </AltContainer>
-    )
+    );
   }
-
 }
 ```
 

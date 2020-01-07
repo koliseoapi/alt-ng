@@ -1,10 +1,5 @@
 sudo: false
 language: node_js
-# nyc does not work nicely with babel 7. Leave coverage disabled until resolved:
-# https://github.com/istanbuljs/babel-plugin-istanbul/issues/140
-#
-# script: npm run coverage
-# after_script: cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
-script: npm run test
+script: npm run coverage
 node_js:
   - "stable"
