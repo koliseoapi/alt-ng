@@ -23,12 +23,15 @@ export default class AltContainer extends React.Component {
     this.storeListeners = [];
   }
 
+  /*
+  TODO: maybe use componentDidUpdate instead (is this really necessary?)
   componentWillReceiveProps(nextProps) {
     // todo: compare with the current properties, maybe we don't need to do anything
     this._destroySubscriptions();
     this.setState(this._reduceState(nextProps));
     this._registerStores(nextProps);
   }
+  */
 
   componentDidMount() {
     this._registerStores(this.props);
